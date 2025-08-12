@@ -1,0 +1,7 @@
+ipykernel
+python-dotenv
+autogen-agentchat
+autogen-ext[openai]
+langchain_community
+langchain
+grpcio
