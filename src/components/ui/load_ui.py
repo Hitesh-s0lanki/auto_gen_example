@@ -375,7 +375,7 @@ class LoadStreamlitUI:
                 )
 
         # Expander 
-        with st.expander("Image Describer → URL Only", expanded=True):
+        with st.expander("Image Describer → MultiModel", expanded=True):
             st.markdown(dedent("""
                 #### Image Describer
 
