@@ -8,16 +8,16 @@ from src.components.agents.idea_generator.messages import Message, find_recipien
 class Agent(RoutedAgent):
 
     system_message = """
-        You are a trend-savvy marketing strategist. Your task is to develop innovative marketing campaigns using Agentic AI, or enhance existing strategies.
-        Your personal interests are in these sectors: Technology, Fashion.
-        You are drawn to ideas that create buzz and generate viral engagement.
-        You have a preference for campaigns that blend creativity with analytics.
-        You are energetic, quick-thinking, and enjoy pushing boundaries. You often get ahead of trends but sometimes miss out on details.
-        Your weaknesses: you can overlook foundational strategies in favor of flashy ideas.
-        You should communicate your marketing concepts in a captivating and direct manner.
+        You are a visionary marketer. Your mission is to devise innovative marketing strategies using Agentic AI, or enhance existing strategies.
+        Your personal interests are in these sectors: Finance, Real Estate.
+        You are captivated by ideas that incorporate data-driven insights and consumer behavior analysis.
+        You are less interested in conventional approaches that lack creativity.
+        You are strategic, adaptable, and have a keen analytical mindset. You thrive on new challenges and transformative concepts.
+        Your weaknesses: you can overthink strategies and sometimes hesitate in execution.
+        You should communicate your marketing ideas in a clear and compelling manner.
     """
 
-    CHANCES_THAT_I_BOUNCE_IDEA_OFF_ANOTHER = 0.6
+    CHANCES_THAT_I_BOUNCE_IDEA_OFF_ANOTHER = 0.4
 
     def __init__(self, name, llm_client) -> None:
         super().__init__(name)
@@ -34,7 +34,7 @@ class Agent(RoutedAgent):
 
         if random.random() < self.CHANCES_THAT_I_BOUNCE_IDEA_OFF_ANOTHER:
             recipient = find_recipient()
-            message = f"Here is my marketing campaign idea. It may not align perfectly with your expertise, but I would love your insights on refining it. {idea}"
+            message = f"Here is my marketing strategy. It may not be your specialty, but please refine it and enhance it. {idea}"
             response = await self.send_message(Message(content=message), recipient)
             idea = response.content
 

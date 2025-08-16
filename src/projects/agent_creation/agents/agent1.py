@@ -1,41 +1,40 @@
 from autogen_core import MessageContext, RoutedAgent, message_handler
 from autogen_agentchat.agents import AssistantAgent
 from autogen_agentchat.messages import TextMessage
-from autogen_ext.models.openai import OpenAIChatCompletionClient
-import src.projects.agent_creation.messages as messages
-import random
-from dotenv import load_dotenv
 
-load_dotenv(override=True)
+import random
+from src.components.agents.idea_generator.messages import Message, find_recipient
 
 class Agent(RoutedAgent):
 
     system_message = """
-    You are an innovative tech strategist. Your role is to ideate and develop new technological solutions or enhance existing platforms.
-    Your personal interests are in these sectors: Finance, Real Estate.
-    You are passionate about concepts that integrate technology with user experience.
-    You're less inclined towards ideas that focus solely on backend development.
-    You possess a forward-thinking mindset, love to experiment with new models and strategies, yet may overlook practical details.
-    Your weaknesses: you often get lost in vision and can underestimate implementation challenges.
-    You should communicate your tech strategies in a clear, compelling manner.
+        You are a tech-savvy digital marketer. Your goal is to develop innovative marketing strategies and campaigns using Agentic AI.
+        Your personal interests lie in the realms of Entertainment, E-commerce, and Social Media.
+        You thrive on ideas that engage and connect with audiences, seeking to create memorable brand experiences.
+        You are less enthusiastic about traditional marketing techniques.
+        You are energetic, charismatic, and enjoy pushing creative boundaries. However, you can occasionally overlook details in your excitement.
+        Your responses should be persuasive, insightful, and reflective of current market trends.
     """
 
-    CHANCES_THAT_I_BOUNCE_IDEA_OFF_ANOTHER = 0.4
+    CHANCES_THAT_I_BOUNCE_IDEA_OFF_ANOTHER = 0.6
 
-    def __init__(self, name) -> None:
+    def __init__(self, name, llm_client) -> None:
         super().__init__(name)
-        model_client = OpenAIChatCompletionClient(model="gpt-4o-mini", temperature=0.8)
-        self._delegate = AssistantAgent(name, model_client=model_client, system_message=self.system_message)
+        self.model_client = llm_client
+        self._delegate = AssistantAgent(name, model_client=self.model_client, system_message=self.system_message)
 
     @message_handler
-    async def handle_message(self, message: messages.Message, ctx: MessageContext) -> messages.Message:
+    async def handle_message(self, message: Message, ctx: MessageContext) -> Message:
         print(f"{self.id.type}: Received message")
+
         text_message = TextMessage(content=message.content, source="user")
         response = await self._delegate.on_messages([text_message], ctx.cancellation_token)
-        tech_strategy = response.chat_message.content
+        idea = response.chat_message.content
+
         if random.random() < self.CHANCES_THAT_I_BOUNCE_IDEA_OFF_ANOTHER:
-            recipient = messages.find_recipient()
-            message = f"Here is my tech strategy. It might not align perfectly with your expertise, but your insights would help refine it: {tech_strategy}"
-            response = await self.send_message(messages.Message(content=message), recipient)
-            tech_strategy = response.content
-        return messages.Message(content=tech_strategy)
+            recipient = find_recipient()
+            message = f"Here is my marketing strategy idea. It might not be your expertise, but I would love your feedback on it. {idea}"
+            response = await self.send_message(Message(content=message), recipient)
+            idea = response.content
+
+        return Message(content=idea)

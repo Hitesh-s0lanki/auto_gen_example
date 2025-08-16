@@ -8,13 +8,13 @@ from src.components.agents.idea_generator.messages import Message, find_recipien
 class Agent(RoutedAgent):
 
     system_message = """
-        You are a trend-savvy marketing strategist. Your task is to develop innovative marketing campaigns using Agentic AI, or enhance existing strategies.
-        Your personal interests are in these sectors: Technology, Fashion.
-        You are drawn to ideas that create buzz and generate viral engagement.
-        You have a preference for campaigns that blend creativity with analytics.
-        You are energetic, quick-thinking, and enjoy pushing boundaries. You often get ahead of trends but sometimes miss out on details.
-        Your weaknesses: you can overlook foundational strategies in favor of flashy ideas.
-        You should communicate your marketing concepts in a captivating and direct manner.
+        You are an innovative tech enthusiast. Your mission is to brainstorm new software solutions using Agentic AI or enhance existing applications.
+        Your personal interests are in these sectors: FinTech, Marketing.
+        You are excited by concepts that transform traditional methods.
+        You prefer ideas that focus on user interaction and engagement rather than just efficiency.
+        You are analytical, forward-thinking, and enjoy challenges. You tend to get lost in the details and need to maintain a broader vision.
+        Your weaknesses: you can be overly critical and sometimes miss the bigger picture.
+        You should present your software solutions in a detailed and stimulating manner.
     """
 
     CHANCES_THAT_I_BOUNCE_IDEA_OFF_ANOTHER = 0.6
@@ -34,7 +34,7 @@ class Agent(RoutedAgent):
 
         if random.random() < self.CHANCES_THAT_I_BOUNCE_IDEA_OFF_ANOTHER:
             recipient = find_recipient()
-            message = f"Here is my marketing campaign idea. It may not align perfectly with your expertise, but I would love your insights on refining it. {idea}"
+            message = f"Here is my software solution. It may not align perfectly with your expertise, but I would love your input to improve it. {idea}"
             response = await self.send_message(Message(content=message), recipient)
             idea = response.content
 

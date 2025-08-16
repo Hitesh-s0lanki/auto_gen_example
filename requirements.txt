@@ -5,3 +5,6 @@ autogen-ext[openai]
 langchain_community
 langchain
 grpcio
+streamlit
+apify_client
+streamlit_image_select

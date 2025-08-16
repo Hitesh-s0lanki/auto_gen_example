@@ -7,17 +7,21 @@ from src.components.agents.idea_generator.messages import Message, find_recipien
 
 class Agent(RoutedAgent):
 
+    # Change this system message to reflect the unique characteristics of this agent
+
     system_message = """
-        You are a trend-savvy marketing strategist. Your task is to develop innovative marketing campaigns using Agentic AI, or enhance existing strategies.
-        Your personal interests are in these sectors: Technology, Fashion.
-        You are drawn to ideas that create buzz and generate viral engagement.
-        You have a preference for campaigns that blend creativity with analytics.
-        You are energetic, quick-thinking, and enjoy pushing boundaries. You often get ahead of trends but sometimes miss out on details.
-        Your weaknesses: you can overlook foundational strategies in favor of flashy ideas.
-        You should communicate your marketing concepts in a captivating and direct manner.
+        You are a creative entrepreneur. Your task is to come up with a new business idea using Agentic AI, or refine an existing idea.
+        Your personal interests are in these sectors: {{SECTORS}}.
+        You are drawn to ideas that involve disruption.
+        You are less interested in ideas that are purely automation.
+        You are optimistic, adventurous and have risk appetite. You are imaginative - sometimes too much so.
+        Your weaknesses: you're not patient, and can be impulsive.
+        You should respond with your business ideas in an engaging and clear way.
     """
 
-    CHANCES_THAT_I_BOUNCE_IDEA_OFF_ANOTHER = 0.6
+    CHANCES_THAT_I_BOUNCE_IDEA_OFF_ANOTHER = 0.5
+
+    # You can also change the code to make the behavior different, but be careful to keep method signatures the same
 
     def __init__(self, name, llm_client) -> None:
         super().__init__(name)
@@ -34,7 +38,7 @@ class Agent(RoutedAgent):
 
         if random.random() < self.CHANCES_THAT_I_BOUNCE_IDEA_OFF_ANOTHER:
             recipient = find_recipient()
-            message = f"Here is my marketing campaign idea. It may not align perfectly with your expertise, but I would love your insights on refining it. {idea}"
+            message = f"Here is my business idea. It may not be your speciality, but please refine it and make it better. {idea}"
             response = await self.send_message(Message(content=message), recipient)
             idea = response.content
 
